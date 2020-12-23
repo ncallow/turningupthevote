@@ -1,0 +1,114 @@
+---
+title: 'Turning *Up* The Vote: Analyzing 2019 Liberal Party Support at Full Voter
+  Turnout'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The significance of voter turnout to democracy cannot be understated. Declines in this figure raise questions about the representativeness of government bodies and the integrity of the electoral process (Achen, 2019; Birch, 2010). However, this aggregated parameter does not tell us the full story. Discrepancies in voter turnout are not distributed equally. Age is a particularly salient variable, with young people less likely to vote than their middle-age and older counterparts (Statistics Canada, 2020; Uppal & LaRochelle-Cote, 2012). However, other sociodemographic factors, including education, family status, economic well-being, and immigrant status, are also significant predictors of voter participation (Uppal & LaRochelle-Cote, 2012). Moreover, research shows that these groups have relatively stable voting preferences. For instance, individuals with undergraduate and post-graduate degrees show increasing preferences for leftist parties and policies (Pew Research Center, 2018). Likewise, young and middle-aged voters are more likely to vote for liberal parties than their older counterparts (Pew Research Center, 2018). As such, who votes and in what numbers can significantly impact electoral outcomes.
+
+A surprising number of Canadians do not vote. In the last federal election, there were approximately twenty-seven million eligible voters (Elections Canada, 2020). Only sixty-seven percent of these individuals cast their ballot, leaving over nine million Canadian voices unheard (Elections Canada, 2020). Given the significance of voter turnout to election results and democracy, a question remains about how the most recent election would have been different if everyone who could vote did? This paper will use logistic regression with post-stratification to answer this question. More specifically, given the consequences of the 2019 minority government outcome, it will examine how Justin Trudeau's Liberal Party would have faired if everyone had voted, compared to other parties? 
+
+This analysis will involve two data sets; the 2019 Canadian Election Study (CES) and the 2017 General Social Survey (GSS). The methodology section will explain each data set's purpose, the predictor and outcome variables of the logistic regression model, and the process of post-stratification. The following results section will outline the post-stratified model predictions for propensity to vote for Justin Trudeau's Liberals over a competing political party. The paper will then conclude with a discussion of relevant findings, acknowledgement of limitations, future research directions, and larger societal implications.
+
+## Methodology
+
+### Data
+
+#### Individual-Level Survey
+
+The individual-level data comes from two waves of the 2019 Canadian Election Study (CES). These polls considers structural elements of Canadian politics and society while examining contemporary political behaviour, beliefs, and actions (Stephenson et al., 2020a). Data collection for the campaign-period survey took place between September 13 and October 21, in the lead-up to the most recent federal election (Stephenson et al., 2020b). The post-election survey took place between October 24 and November 11 of 2019, in the time following election (Stephenson et al., 2020b). The target population^[The target population refers to the set of individuals who meet the study requirements (Wu & Thompson, 2020).] consists of eligible electors, Canadian citizens and permanent residents over eighteen years of age who live in the ten provinces (Stephenson et al., 2020b). As a result, the political preferences and behaviours of individuals from the territories are excluded from this analysis (see Weaknesses)^[The CES researchers explain that although they did not seek out responses from the territories, there were several responses from these areas found in the data (Stephenson et al., 2020b). These individuals were removed in this study, given that the census-level GSS data contains no respondents from the territories.]. There is little detail on the construction of the CES sampling frame^[Under ideal conditions, the sampling frame, or frame population, lists all individuals in the target population (Wu & Thompson, 2020). In practice, there is often a discrepancy between the target and frame populations, leading to issues of coverage error and representativeness (Wu & Thompson, 2020).]. Researchers hired Qualtrics to construct the sample, who drew from several proprietary market research panels^[Market research panels refer to "a group of people recruited to respond to a survey" (Qualtrics, n.d.).], providing no details on their process (Stephenson et al., 2020b). 
+
+Likewise, there is little explicit information on the sampling approach^[The sampling approach is how individuals are selected from the sampling frame (see Note 3).] undertaken by Qualtrics on behalf of the CES research team. However, the information provided by both this firm and the researchers seems to suggest a probability sampling approach^[The difference between a probability and non-probability sampling approach is random selection. Information from the CES team and Qualtrics suggests the latter, indicating that respondents were randomly selected.]. Qualtrics (n.d.) explains that their research panels are often "selected carefully so that they represent a sample of your target population" (para 2). Moreover, Stephenson et al. (2020b) explain that the target population was stratified by gender, geographic location, and language. These factors taken together point towards a stratified random sampling method^[Stratified random sampling is one example of a probability sampling approach. It involves dividing the population into homogenous groups, also known as strata, before constructing the sample (Caetano, 2020b). Then, in each stratum, a simple random sample is performed (Caetano, 2020b).]. If this was the strategy employed, there are several benefits and drawbacks. Probability sampling allows for inferences about the larger population, a crucial requirement for this paper (Caetano, 2020a). Additionally, this approach emphasizes the validity and reliability of measures, as sampling errors can be calculated and results reproduced by other researchers (Caetano, 2020a). However, probability sampling is a costly and time-consuming endeavour, heavily reliant on the sampling frame's accuracy and subject to non-participation (Caetano, 2020a). These conclusions about the sampling approach should be interpreted very cautiously, given significant amounts of missing information.
+
+In total, over seventy-thousand individuals interacted with the CES campaign period survey and over thirteen-thousand individuals interacted with the post-election survey (Stephenson et al., 2020b). Amongst these groups, some elected not to participate or were screened out. Several determining factors for excluding responses included ineligibility to vote, could not match to campaign period survey, postal code mismatch, and speeding through the survey (Stephenson et al., 2020b). After these data cleaning procedures, a total of $n = 37, 822$ and $n = 10,337$ respondents made up the sampled population^[The sampled population refers to the set of individuals who participate in the survey (Wu & Thompson, 2020).] of the campaign period and post-election survey respectively. In this survey, this value was further reduced to $n = 8,607$ after necessary exclusions (see Data: Inclusions and Exclusions). The presence of missing data is a persistent concern for survey research. The sociodemographic predictor variables selected for this analysis contain no missing data as their completion was a prerequisite for inclusion in the CES data set (Stephenson et al., 2020b). However, our response variable on voter choice contains some holes (see Figure 1). In total, only $16.55\%$ of respondents left this question blank. While this is unfortunate, it is not unreasonably high to warrant concern around the subsequent findings.
+
+#### Census-Level Survey
+
+The census-level data comes from the 2017 General Social Survey (GSS). This survey took place between February 2 and November 30 of 2017, and considers the changing role of families in Canadians' lives (Beaupré, 2020). The target population (see Note 1) of the GSS includes all individuals older than fifteen years of age of the ten provinces. Like the CES, this desired demographic excludes the territories in addition to residents of institutions (Beaupré, 2020). Statistics Canada constructs the sampling frame (see Note 3) using a two-stage approach. First, personnel pull landline and cellular numbers from several sources, including the Census and phone companies (Beaupré, 2020). Statistics Canada then associates these phone numbers with a specific household using the Address Register, a list of all provinces' residences (Beaupré, 2020). This strategy produces discrepancies between the target and frame populations, introducing coverage error (see Note 3) into the survey data. Expressly, individuals without a known phone number are excluded from the analysis. However, the inclusion of households with only cellular phone numbers has improved coverage since this group "constitutes a constantly growing portion of the population" (Beaupré, 2020, p. 10).
+
+The GSS employs a stratified random sampling approach (see Note 7). Statistics Canada created strata by geographic area, relying on information from other sources, including the Census (Beaupré, 2020). A simple random sample without replacement was then procured in each group (Beaupré, 2020). There are numerous benefits and drawbacks of this probability sampling approach, discussed above (see Data: Individual-Level Survey). The sampled population (see Note 8) came to a total of $n = 20,602$, yielding a response rate of $52.4\%$ (Beaupré, 2020). Missing data on the variables of interest is minimal or non-existent (see Figure 2). Therefore, the GSS is considered appropriate census-level data for this analysis
+
+#### Inclusion and Exclusions
+
+In this section: (1) sex versus gender between PES and GSS; (2) removal of individuals who did not indicate a vote choice from the PES; (3) removal of folx under the age of eighteen from the GSS.
+
+### Model
+
+This paper will employ a logistic regression model with post-stratification to estimate propensity to vote for Trudeau's Liberal Party at full voter turnout. Logistic regression was selected due to the binary nature of the outcome variable, voting for the Liberals versus a competing political party (Caetano, 2020c). Likewise, because we have no prior information on the variables of interest, we chose a Frequentist approach over comparable Bayesian methods (Caetano, 2020d). The following two sections explain the process of constructing the individual-level model and post-stratifying to the census-level.
+
+#### Logistic Regression Model
+
+First, we will use the individual-level survey data from the Canadian Election Study to construct a logistic regression model. This model estimates the likelihood that an individual with a given sociodemographic background will vote for Trudeau's Liberals over a competing political party. The logistic regression model takes the following mathematical form. Please refer to Table 1 for further detail on variable categories and reference levels.
+
+$$\log\Big(\frac{\hat{p}}{1-\hat{p}}\Big) = \hat{\beta}_0 + \hat{\beta}_1x_1 + \underbrace{\Big(\hat{\beta}_2x_{3,1} + \cdots+\hat{\beta}_{3,6}\Big)}_{\text{Education Categorical Variables}}$$
+
+The left side of this equation produces the log odds of a binary result, where $p$ is the probability that the event will take place (Caetano, 2020c). In this paper, this translates to the log-odds that an individual will vote for the Liberal Party instead of someone else. The slope coefficients $\hat{\beta}_1, \hdots, \hat{\beta}_8$, represent the change in log-odds associated with a given predictor variable $x_1, \hdots, x_{3,6}$. We have included three such variables, age, sex, and education. Lastly, $\hat{\beta}_0$ is the logistic regression intercept. In our model, this corresponds to the likelihood that an eighteen-year-old male with no education will vote for the Liberal Party.
+
+We selected these three predictor variables given available research on voter preferences. The Pew Research Center (2018) validates that these sociodemographic variables are consistently significant predictors of political behaviour. For instance, there is a growing gender gap, where women are significantly more likely to vote for leftist parties than their male counterparts (Pew Research Center, 2018). Similarly, educational attainment continues to inform partisan behaviour in meaningful ways. While individuals with a post-secondary gravitate towards liberal policies and groups, those without university education are split between the left and the right (Pew Research Center, 2018). Finally, age is a fundamental element of political support. The Pew Research Center (2018) concludes that the "generational gap in partisanship is now more pronounced than in the past" and continues to widen (para 28). Younger individuals are consistently more likely to vote for leftist parties than older generations (Pew Research Center, 2018). These well-established voting patterns lend support to their inclusion in our model. 
+
+#### Post-Stratification
+
+Now, we will use the census data to post-stratify our individual-level results. This technique allows us to extrapolate beyond the CES respondents and consider the likelihood of voting for the Liberal Party amongst the larger Canadian electorate. We calculate our post-stratified estimates using the following formula (Caetano, 2020e).
+
+$$\hat{y}^{ps} = \frac{\sum (N_j\hat{y}_j)}{\sum N_j}$$
+
+The post-stratification process consists of the following steps. First, we divide our CES sample data into $j$ subsets by enumerating every combination of our three predictor variables (Caetano, 2020e). Therefore, one bin will include all eighteen-year-old females with a bachelor's degree. Another cell will contain fourty-five-year-old males with a master's degree. These examples could continue indefinitely as we consider every possible combination of responses to these sociodemographic variables. Then, we compute an estimate of our response variable $y_j$, propensity to vote for the Liberal Party, for each of these subsets using our logistic regression model (Caetano, 2020e). Finally, we weigh these estimates according to the proportion of these individuals in the census-level data $N_j/\sum N_J$ (Caetano, 2020e). We sum over all these weighted estimates to compute the final post-stratified estimate $\hat{y}^{ps}$ (Caetano, 2020e). 
+
+
+## Results
+
+##### Table 1: Summary of Post-Stratified Model Results
+
+Political Party            Actual Vote Share      Predicted Vote Share          Difference
+-------------------------- ---------------------- ----------------------------- -----------------
+Liberal Party              $33.1\%$               $31.46\%$                     $-1.64\%$
+Conservative Party         $34.3\%$               $33.83\%$	                    $-0.47\%$
+Bloc Québécois             $7.6\%$                $5.58\%$                      $-2.02\%$
+New Democratic Party       $16.0\%$               $14.85\%$                     $-1.15\%$
+
+
+
+
+## References
+
+Achen, C. H. (2019). *Understanding Voter Turnout in Canada: What Data Do We Lack?*. Commonwealth Parliamentary Association.
+
+Birch, S. (2010). Perceptions of Electoral Fairness and Voter Turnout. *Comparative Political Studies, 43*(12), 1601-1622. 10.1177/0010414010374021
+
+Caetano, S. (2020a). Probability versus Non-Probability Sampling [PowerPoint Slides]. Quercus.
+https://q.utoronto.ca/courses/184060/files/8975319?module_item_id=1816946 (https://q.utoronto.ca/courses/184060/files/8975319?
+module_item_id=1816946)
+
+Caetano, S. (2020b). Sampling Techniques [PowerPoint Slides]. Quercus. https://q.utoronto.ca/courses/184060/files/9058287?module_item_id=1828122
+
+Caetano, S. (2020c). Introduction to Logistic Regression [PowerPoint Slides]. Quercus. https://q.utoronto.ca/courses/184060/files/9309406?module_item_id=1855302
+
+Caetano, S. (2020d). Introduction to Bayesian Inference [PowerPoint Slides]. Quercus. https://q.utoronto.ca/courses/184060/files/9490196?module_item_id=1872494
+
+Caetano, S. (2020d). Multilevel Regression and Post-Stratification [PowerPoint Slides]. Quercus. https://q.utoronto.ca/courses/184060/files/9632737?module_item_id=1891982
+
+Elections Canada. (2020). *Voter Turnout at Federal Elections and Referendums*. https://www.elections.ca/content.aspx?section=ele&dir=turn&document=index&lang=e#ftn6
+
+Pew Research Center. (2018). Trends in Party Affiliation Among Demographic Groups. https://www.pewresearch.org/politics/2018/03/20/1-trends-in-party-affiliation-among-demographic-groups/
+
+Qualtrics. (n.d.) *Online Panels: Get Responses for Surveys & Research*. Qualtrics XM. https://www.qualtrics.com/research-services/online-sample/
+
+Statistics Canada. (2020). *Reasons for Not Voting in the Federal Election, October 21, 2019*. Government of Canada. https://www150.statcan.gc.ca/n1/daily-quotidien/200226/dq200226b-eng.htm
+
+Stephenson, L. B., Harell, A., Rubenson, D. & Loewen, P. J. (2020a). *Welcome to the 2019 Canadian Election Study* Canadian Election Study. http://www.ces-eec.ca/
+
+Stephenson, L. B., Harell, A., Rubenson, D. & Loewen, P. J. (2020b). *2019 Canadian Election Study - Online Survey Technical Report and Codebook*. V1
+
+Uppal, S., & LaRochelle-Cote, S. (2012). Factors Associated with Voting. *Perspectives on Labour and Income, 24*(1), 4. https://search.proquest.com/docview/1015345477
+
+Wu, C., & Thompson, M. E. (2020). *Sampling Theory and Practice.* Cham: Springer International Publishing.
+
+

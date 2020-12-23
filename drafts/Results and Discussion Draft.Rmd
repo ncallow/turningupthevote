@@ -1,0 +1,313 @@
+---
+title: "Results"
+author: "Nick Callow"
+date: "12/21/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r, include = FALSE}
+
+library(tidyverse)
+library(broom)
+
+```
+
+
+```{r New Model 1: Liberal Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model1 <- glm(vote_liberal ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model1) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model1 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+liberal_results <-
+  census_data %>% 
+  mutate(liberal_proportion = estimate*n) %>% 
+  summarise(liberal_prediction = sum(liberal_proportion)/sum(n))
+
+summary(model1)
+print(liberal_results)
+
+```
+
+```{r New Model 2: Conservative Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model2 <- glm(vote_conservative ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model2) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model2 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+conservative_results <-
+  census_data %>% 
+  mutate(conservative_proportion = estimate*n) %>% 
+  summarise(conservative_prediction = sum(conservative_proportion)/sum(n))
+
+summary(model2)
+print(conservative_results)
+
+```
+
+```{r New Model 3: Bloc Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model3 <- glm(vote_bloc ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model3) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model3 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+bloc_results <-
+  census_data %>% 
+  mutate(bloc_proportion = estimate*n) %>% 
+  summarise(bloc_prediction = sum(bloc_proportion)/sum(n))
+
+summary(model3)
+print(bloc_results)
+
+```
+
+```{r New Model 4: NDP Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model4 <- glm(vote_ndp ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model4) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model4 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+ndp_results <-
+  census_data %>% 
+  mutate(ndp_proportion = estimate*n) %>% 
+  summarise(ndp_prediction = sum(ndp_proportion)/sum(n))
+
+summary(model4)
+print(ndp_results)
+
+```
+
+```{r New Model 5: Green Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model5 <- glm(vote_green ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model5) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model5 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+green_results <-
+  census_data %>% 
+  mutate(green_proportion = estimate*n) %>% 
+  summarise(green_prediction = sum(green_proportion)/sum(n))
+
+summary(model5)
+print(green_results)
+
+```
+
+
+```{r New Model 6: PPC Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model6 <- glm(vote_ppc ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model6) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model6 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+ppc_results <-
+  census_data %>% 
+  mutate(ppc_proportion = estimate*n) %>% 
+  summarise(ppc_prediction = sum(ppc_proportion)/sum(n))
+
+summary(model6)
+print(ppc_results)
+
+```
+
+```{r New Model 7: Other Support, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model7 <- glm(vote_other ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model7) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model7 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+other_results <-
+  census_data %>% 
+  mutate(other_proportion = estimate*n) %>% 
+  summarise(other_prediction = sum(other_proportion)/sum(n))
+
+summary(model7)
+print(other_results)
+
+```
+
+```{r New Model 8: Spoiled Ballots, include=FALSE}
+
+# Read-in survey and census-level data.
+
+survey_data <- read_csv("ces2019_recoded.csv")
+census_data <- read_csv("gss2017_recoded.csv")
+
+# Construct logistic regression model.
+
+model8 <- glm(vote_spoil ~ as.factor(age_cat) + as.factor(sex) + as.factor(education), data = survey_data, family = "binomial" )
+broom::tidy(model8) 
+
+# Post-stratification process.
+
+census_data$logodds_estimate <-
+  model8 %>% 
+  predict(newdata=census_data)
+
+census_data$estimate <-
+  exp(census_data$logodds_estimate)/(1+exp(census_data$logodds_estimate))
+
+spoil_results <-
+  census_data %>% 
+  mutate(spoil_proportion = estimate*n) %>% 
+  summarise(spoil_prediction = sum(spoil_proportion)/sum(n))
+
+summary(model8)
+print(spoil_results)
+
+```
+
+## Results
+
+##### Table 1: Summary of Post-Stratified Model Results
+
+Political Party            Actual Vote Share      Predicted Vote Share          Difference
+-------------------------- ---------------------- ----------------------------- -----------------
+Liberal                    $33.1\%$               $32.73\%$                     $-0.37\%$
+Conservative               $34.3\%$               $35.01\%$	                    $+0.71\%$
+Bloc Quebecois             $7.6\%$                $5.59\%$                      $-2.01\%$
+New Democratic             $16.0\%$               $16.43\%$                     $+0.43\%$
+Green                      $6.5\%$                $7.00\%$                      $+0.50\%$
+People's                   $1.6\%$                $2.22\%$                      $+0.62\%$
+Other                      $0.6\%$                $0.52\%$                      $-0.08\%$
+Spoil                      $\text{N/A}$           $0.32\%$                      $\text{N/A}$
+
+Table 1 presents a comparison of our results against the actual vote share totals from the 2019 Federal Election (Elections Canada, n.d.). We find that two major political parties would capture less votes at full voter turnout using our logistic regression model with post-stratification that accounts for age, sex, and education level. Specifically, we estimate that Liberals would receive $32.73\%$ of votes and the Bloc Quebecois would receive $5.59\%$, down $0.37\%$ and $2.01\%$, respectively. In contrast, the remaining four parties saw increases in vote share. Using this model, we estimate the voting percentages for the conservatives at $35.01\%$, the New Democrats at $16.43\%$, the Greens at $7.00\%$, and People's at $2.22\%$. These changes reflect increases of $0.71\%, 0.43\%, 0.50\%, 0.62\%$, respectively. Finally, our results indicate that other political parties would see a decrease in votes, and that the percentage of votes spoiled at full voter turnout would be $0.32\%$.
+
+## Discussion
+
+### Summary
+
+This paper highlights the significance of voting to democracy. Every federal election cycle, millions of eligible Canadians do not cast a ballot. However, the distribution of voter turnout is complex. Research consistently validates that some individuals are more likely to vote than others, and that these groups of people have established political preferences. As such, who votes and in what numbers can significantly impact electoral outcomes. Building on this, we have employed several logistic regression models with post-stratification to estimate vote shares at full turnout. Using the 2019 Canadian Election Study, we constructed eight logistic regression models, each of which predict the probability of voting for one political party based on age, sex, and education sociodemographic. Our results (see Table 1) indicate a shift in support for every political party, and that some of these vote shifts are significant. 
+
+### Conclusions
+
+This model yields several significant conclusions. First, our data indicates that parties positioned on either end of the political spectrum, such as the Greens, NDP, PPC, and Conservatives, see increases in vote share at full turnout. However, the same cannot be said of centerist parties such as the Liberal, as well as regional parties like the Bloc Quebecois. This trend may point towards increasing political polarization in federal politics. Canadian votes are becoming increasingly unwilling to compromise on their political beliefs and values. As a result, they are throwing their support behind parties furhter along both sides of the political spectrum. Moreover, if this trend continues, we may see new institutional structures of governments. Coalition governments are common in many other constitutional monarchies. However, this form of government has been a rarity in Canada. Our results suggest that at larger levels of voter turnout, no one party could capture enough votes to win a majoirty or possibly even a stable minority. If this argument is valid, we will see significant changes to the operation of the federal government.
+
+Second, the Liberal or Conservative Party has been asked to form government in every modern federal election. As such, the standings of these two parties relative to one another is a consistent topic of political discussions. Our findings suggest that the Conservative Party would fair better at higher levels of political participation. Meanwhile, the same cannot be said of the Liberals. Although our estimated increase of $0.71\%$ is not significantly higher than current levels, it may have been enough in 2019 to force a transfer of power from the incumbent liberal government. This finding is especially true given the Liberal Party's transformation from majority to minority government. Future work might explore how these political preferences change over time.
+
+Finally, our findings diverge slightly from previous research. There is general consensus that younger, female, well-educated voters lean very much to the left (Pew Research Center, 2018). At the same time, scholars find that these individuals are also more unlikely to vote (Elections Canada, 2020). As such, we would expect that at full voter turnout, where these demographics increase in size, that left-leaning parties would take votes away from right-spectrum parties such as the Conservatives and PPC. To the contrary, the Conservatives and PPC see the largest increases in our model. We do not have an explanation for this case. However, we suggest a cautious interpretation of these results given several study limitations (see below).
+
+### Weaknesses
+
+This study is not without its limitations. First, there is a clear mismatch between the individual-level survey and census data. While the Canadian Election Study samples individuals during the 2019 Federal Election, the GSS is a census-level survey undertaken by Statistics Canada in 2017. At the time of writing this paper, more recent versions of the General Social Survey were not acccessible for analysis. Moreover, we chose this data set over alternatives, such as the 2016 Census of Population, because it was more current and accessible. This choice raises some limitations, including our ability to accurately weigh our estimates according to the most recent population demographic data. As such, our results, while insightful, should be approached with some caution.
+
+Another limitation of this paper is that our method of logistic regression with post-stratification is inefficient for a problem of this nature. As explained earlier, we use logistic regression to model relationships where the response variable is binary. Although each model is constructed to be binary (e.g. Liberal or Other Party), this need not be the case. A more efficient approach would be to create a singular model with a categorical response variable. This method is called mutli-nomial logistic regression. Coupled with post-stratification, this approach would be less time-consuming and more efficient.
+
+Third, a consistent difficulty in survey research is the sex versus gender issue. Although sometimes interpreted as such, sex and gender are not synonmous. Kennedy et al. (2020) explain that sex is "a set of biological attributes in humans and animals ... including chromosones, gene expression hormone levels and function, and reproductive/sexual anatomy" (p.4). In contrast, gender is a socially constructed role that reflects an individuals identity (Kennedy et al., 2019). "It influences how people perceive themselves and each other, how they act and interact, andthe distribution of power and resources in society" (Kennedy et al., 2019, p. 4). While the CES 2019 measures its respondents gender, our 2017 GSS census data measure sex. To post-stratify our individual-level results, these two variables must be recoded. Building on the work of Kennedy et al. (2019), we elected to impute non-binary individuals as female. This choice reflects an understanding that non-binary respondnets experience the same, if not more, marginalization and discrimination as those who identify as female (Kennedy et al., 2019). The benefit of this approach is that these individuals remain in the data set. However, the concern is that this further confuses the unique and significant differences between sex and gender (Kennedy et al., 2019).
+
+More work remains to be done in this area. First, future research may consider examining this problem with alternative data sources. For example, others may use the 2016 Census of Population to post-stratify their individual level estimates. The larger sample size and inclusions of additional sociodemographic variables would produce significant findings. Moreover, a new Census is scheduled to take place in 2021. Given the traditional instability of minority governments, there may be future opportunities to engage with a new Canadian Election Study in light of a more recent census data. Second, research confirms that geographic location is a significant predictor of voting behaviour. Time limitations prevented the addition of region in this paper. However, an appropriate next step to account for these variations would be to employ a random-intercept or random-slope model conditioned on province or territory. This practice would better illuminate change in the Bloc Quebecois vote share at full turnout, who competes only in the province of Quebec.
+
+
+
+
+
+
+
